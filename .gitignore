@@ -1,0 +1,5 @@
+.env
+# does not ignore the README.md file
+!README.md
+\client_secret.json
+token_files/*.json/
