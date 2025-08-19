@@ -22,11 +22,17 @@ def get_google_api_service(client_secret_file, api_name, api_version, scopes, pr
 
     Returns:
         googleapiclient.discovery.Resource: A Google API service instance.
+        :param scopes:
+        :param api_version:
+        :param api_name:
+        :param client_secret_file:
+        :param prefix:
     """
     CLIENT_SECRET_FILE = client_secret_file
     API_SERVICE_NAME = api_name
     API_VERSION = api_version
-    SCOPES = [scope for scope in scopes[0]]
+    # SCOPES = [scope for scope in scopes[0]]
+    SCOPES = scopes[0].join('')
 
     creds = None
     working_dir = os.getcwd()
@@ -38,13 +44,13 @@ def get_google_api_service(client_secret_file, api_name, api_version, scopes, pr
         os.mkdir(os.path.join(working_dir, token_dir))
 
     if os.path.exists(os.path.join(working_dir, token_dir, token_file)):
-        creds = Credentials.from_authorized_user_file(os.path.join(working_dir, token_dir, token_file), SCOPES)
+        creds = Credentials.from_authorized_user_file(os.path.join(working_dir, token_dir, token_file), ' '.join(SCOPES))
 
-    # The file token.json stores the user's access and refresh tokens, and is
-    # created automatically when the authorization flow completes for the first time.
-    if os.path.exists(token_file):
-        with open(token_file, 'rb') as token:
-            creds = json.load(token)
+    # # The file token.json stores the user's access and refresh tokens, and is
+    # # created automatically when the authorization flow completes for the first time.
+    # if os.path.exists(token_file):
+    #     with open(token_file, 'rb') as token:
+    #         creds = json.load(token)
 
     # If there are no (valid) credentials available, let the user log in.
     if not creds or not creds.valid:
@@ -55,7 +61,7 @@ def get_google_api_service(client_secret_file, api_name, api_version, scopes, pr
                 raise FileNotFoundError(f"The file '{CLIENT_SECRET_FILE}' was not found. "
                                         "Please download it from the Google Cloud Console.")
 
-            flow = InstalledAppFlow.from_client_secrets_file(CLIENT_SECRET_FILE, scopes)
+            flow = InstalledAppFlow.from_client_secrets_file(CLIENT_SECRET_FILE, ' '.join(SCOPES))
             creds = flow.run_local_server(port=0)
 
         # Save the credentials for the next run
@@ -65,6 +71,7 @@ def get_google_api_service(client_secret_file, api_name, api_version, scopes, pr
     try:
         service = build(API_SERVICE_NAME, API_VERSION, credentials=creds, static_discovery=False)
         print(API_SERVICE_NAME, API_VERSION, 'service created successfully')
+        # print(dir(service))
         return service
     except Exception as e:
         print(e)
@@ -75,18 +82,20 @@ def get_google_api_service(client_secret_file, api_name, api_version, scopes, pr
 
 if __name__ == '__main__':
     # Example usage for the Gmail API
-    SCOPES = ['https://www.googleapis.com/auth/gmail.readonly']
-    client_secret_file = "client_secret.json"
+    # GMAIL_SCOPES = ['https://www.googleapis.com/auth/gmail.readonly']
+    GMAIL_SCOPES = ['https://mail.google.com/']
+
+    client_secret = "client_secret.json"
 
     print("Constructing Gmail API service instance...")
     try:
-        gmail_service = get_google_api_service(client_secret_file, 'gmail', 'v1', *SCOPES)
+        gmail_service = get_google_api_service(client_secret, 'gmail', 'v1', GMAIL_SCOPES)
         print("Gmail API service instance created successfully.")
 
         # Example of how you would use the service:
-        # results = gmail_service.users().labels().list(userId='me').execute()
-        # labels = results.get('labels', [])
-        # print(labels)
+        results = gmail_service.users().labels().list(userId='me').execute()
+        labels = results.get('labels', [])
+        print(labels)
 
     except FileNotFoundError as e:
         print(f"Error: {e}")
