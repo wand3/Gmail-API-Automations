@@ -3,4 +3,4 @@
 !README.md
 \client_secret.json
 token_files/
-./__py*/
+__py*/

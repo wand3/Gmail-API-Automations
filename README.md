@@ -37,7 +37,7 @@ Before you can run this project, you need to have the following:
 
 - **Python 3.8+**: Ensure you have a compatible version of Python installed
 - **Google Cloud Platform (GCP) Project**: A GCP project with the Gmail API enabled
-- **OAuth 2.0 Credentials**: A `credentials.json` file downloaded from the GCP console, configured for a "Desktop app" or "Web application" OAuth client ID
+- **OAuth 2.0 Credentials**: A `client_secret.json` file downloaded from the GCP console, configured for a "Desktop app" or "Web application" OAuth client ID
 - **`pipenv` (Recommended)**: For managing project dependencies and virtual environments
 
 -----
@@ -49,7 +49,7 @@ Follow these steps to get the project up and running:
 1. **Clone the repository**:
    ```bash
    git clone https://github.com/wand3/Gmail-API-Automations.git
-   cd your-project-name
+   cd Gmail-API-Automations
    ```
 
 ## Usage
@@ -58,16 +58,13 @@ This project includes a main entry point for running various automation tasks. T
 ## Project Structure
 A brief overview of the key files and directories:
 ```
-├── src/
-│   ├── gmail_api.py          # Core module for interacting with the Gmail API
-│   ├── auth.py               # Handles OAuth 2.0 authentication flow
-│   └── utils.py              # Utility functions (e.g., base64 encoding/decoding)
-├── tests/
-│   ├── test_gmail_api.py     # Unit tests for the gmail_api module
-│   └── fixtures/             # Mock data for testing
-├── .env.example              # Template for environment variables
-├── credentials.json          # Your downloaded API credentials (DO NOT COMMIT)
-├── token.json                # Generated access token (DO NOT COMMIT)
-├── Pipfile                   # pipenv dependency management file
+├── .env/                     # Template for environment variables
+├── token_files/              # Generated access token (DO NOT COMMIT)
+├── gmail_api.py              # Core module for interacting with the Gmail API
+├── main.py                   # Handles email views and send email
+├── gmail_api.py              # Utility functions (e.g., view and send mail)
+├── client_secret.json        # Your downloaded API credentials (DO NOT COMMIT)
+├── requirements.txt          # pip install -r file
+└── .gitignore                # Folders and files to ignore
 └── README.md                 # This file
 ```

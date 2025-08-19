@@ -1,15 +1,14 @@
-# import marimo as mo
 from gmail_api import init_gmail_service
 from gmail_api import _extract_body, send_email, get_email_messages, get_email_message_details
 
 GMAIL_SCOPES = ['https://mail.google.com/']
-# GMAIL_SCOPES = ['https://www.googleapis.com/auth/gmail.send']
 
 try:
     client_secret = "client_secret.json"
 
     service = init_gmail_service(client_secret, "gmail", "v1", *GMAIL_SCOPES)
     print("Gmail service started")
+    print("Viewing email inbox ---------- ")
     try:
         messages = get_email_messages(service, max_results=5)
 
@@ -26,17 +25,19 @@ try:
                 print(f"Star: {details['star']}")
                 print(f"Label: {details['label']}")
                 print("*-" * 50)
+        print("Viewing email inbox successful ✅✅✅✅✅✅✅✅✅ ")
+
     except Exception as e:
         print(f'Error Viewing mail {e}')
 
     try:
-        print("Trying to send email")
+        print("Sending email to address ---------- ")
         to_address = 'testemail@gmail.com'
         email_subject = 'lfg'
         email_body = 'Body test of gmail API'
         response = send_email(service, to_address, email_subject, email_body)
         print(response)
-        print("Email Sent success")
+        print("Sending email success ✅✅✅✅✅✅✅✅✅ ")
     except Exception as e:
         print(f'Error sending mail {e}')
 except Exception as e:
