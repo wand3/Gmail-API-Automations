@@ -57,7 +57,7 @@ This project includes a main entry point for running various automation tasks. T
 
 ## Project Structure
 A brief overview of the key files and directories:
-.
+```
 ├── src/
 │   ├── gmail_api.py          # Core module for interacting with the Gmail API
 │   ├── auth.py               # Handles OAuth 2.0 authentication flow
@@ -70,3 +70,4 @@ A brief overview of the key files and directories:
 ├── token.json                # Generated access token (DO NOT COMMIT)
 ├── Pipfile                   # pipenv dependency management file
 └── README.md                 # This file
+```

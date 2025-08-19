@@ -8,8 +8,8 @@ from google_api import get_google_api_service
 
 
 def init_gmail_service(client_file, api_name='gmail', api_version='v1', scopes=None):
-    # scopes = ['https://mail.google.com/']
-    scopes = ['https://www.googleapis.com/auth/gmail.send/']
+    scopes = ['https://mail.google.com/']
+    # scopes = ['https://www.googleapis.com/auth/gmail.send/']
 
     return get_google_api_service(client_file, api_name, api_version, scopes)
 

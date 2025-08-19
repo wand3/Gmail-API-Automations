@@ -32,7 +32,7 @@ def get_google_api_service(client_secret_file, api_name, api_version, scopes, pr
     API_SERVICE_NAME = api_name
     API_VERSION = api_version
     # SCOPES = [scope for scope in scopes[0]]
-    SCOPES = scopes[0].join('')
+    SCOPES = scopes
 
     creds = None
     working_dir = os.getcwd()
@@ -40,17 +40,18 @@ def get_google_api_service(client_secret_file, api_name, api_version, scopes, pr
     token_file = f'token_{API_SERVICE_NAME}_{API_VERSION}{prefix}.json'
 
     # Check if token dir exists first, if not, create the folder
-    if not os.path.exists(os.path.join(working_dir, token_dir)):
-        os.mkdir(os.path.join(working_dir, token_dir))
+    try:
+        if not os.path.exists(os.path.join(working_dir, token_dir)):
+            os.mkdir(os.path.join(working_dir, token_dir))
 
-    if os.path.exists(os.path.join(working_dir, token_dir, token_file)):
-        creds = Credentials.from_authorized_user_file(os.path.join(working_dir, token_dir, token_file), ' '.join(SCOPES))
-
-    # # The file token.json stores the user's access and refresh tokens, and is
-    # # created automatically when the authorization flow completes for the first time.
-    # if os.path.exists(token_file):
-    #     with open(token_file, 'rb') as token:
-    #         creds = json.load(token)
+        if os.path.exists(os.path.join(working_dir, token_dir, token_file)):
+            creds = Credentials.from_authorized_user_file(os.path.join(working_dir, token_dir, token_file),
+                                                          SCOPES)
+    except Exception as e:
+        print(e)
+        print(f'Failed to create service instance for {API_SERVICE_NAME}')
+        os.remove(os.path.join(working_dir, token_dir, token_file))
+        return None
 
     # If there are no (valid) credentials available, let the user log in.
     if not creds or not creds.valid:
@@ -61,7 +62,7 @@ def get_google_api_service(client_secret_file, api_name, api_version, scopes, pr
                 raise FileNotFoundError(f"The file '{CLIENT_SECRET_FILE}' was not found. "
                                         "Please download it from the Google Cloud Console.")
 
-            flow = InstalledAppFlow.from_client_secrets_file(CLIENT_SECRET_FILE, ' '.join(SCOPES))
+            flow = InstalledAppFlow.from_client_secrets_file(CLIENT_SECRET_FILE, SCOPES)
             creds = flow.run_local_server(port=0)
 
         # Save the credentials for the next run
